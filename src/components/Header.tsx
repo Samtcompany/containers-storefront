@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import type { Lang, StorefrontConfig } from '@/lib/types';
 import { u, ui } from '@/lib/ui';
 import { Brand } from './Logo';
+import { useCart } from './cart/CartProvider';
 
 const NAV: Array<{ id: string; key: keyof typeof ui.nav }> = [
   { id: 'shop', key: 'shop' }, { id: 'import', key: 'import' }, { id: 'calc', key: 'calc' }, { id: 'journey', key: 'journey' },
@@ -17,6 +18,9 @@ export function Header({ lang, config, enabled }: { lang: Lang; config: Storefro
   const [active, setActive] = useState<string | null>(null);
   const [menu, setMenu] = useState(false);
   const [dark, setDark] = useState(false);
+  const cart = useCart();
+  const [bump, setBump] = useState(false);
+  useEffect(() => { if (cart.count > 0) { setBump(true); const t = setTimeout(() => setBump(false), 500); return () => clearTimeout(t); } }, [cart.count]);
   const items = NAV.filter((n) => enabled.includes(n.id));
   const extra = MOBILE_EXTRA.filter((n) => enabled.includes(n.id));
   const home = `/${lang}`;
@@ -57,6 +61,12 @@ export function Header({ lang, config, enabled }: { lang: Lang; config: Storefro
           <svg className="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M20 14.5A8 8 0 1 1 9.5 4 6.5 6.5 0 0 0 20 14.5z" /></svg>
         </button>
         <a className="icon-btn lang-btn" href={switchTo} onClick={process.env.NEXT_PUBLIC_SNAPSHOT === '1' ? undefined : (e) => { e.preventDefault(); window.location.href = switchTo + window.location.hash; }} aria-label={u(ui.langSwitch, lang)}>{u(ui.langLabel, lang)}</a>
+        {enabled.includes('shop') ? (
+          <button className={`icon-btn cart-btn${bump ? ' bump' : ''}`} type="button" aria-label={u(ui.cart.open, lang)} onClick={() => cart.setOpen(true)}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 2-1.5L21 8H6.2" /><circle cx="10" cy="20" r="1.3" /><circle cx="17" cy="20" r="1.3" /></svg>
+            <span className="count">{cart.count}</span>
+          </button>
+        ) : null}
         <button className="icon-btn menu-btn" type="button" aria-expanded={menu} aria-controls="mnav" aria-label={u(ui.menu, lang)} onClick={() => setMenu(!menu)}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
         </button>

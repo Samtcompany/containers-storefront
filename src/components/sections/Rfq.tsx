@@ -15,7 +15,7 @@ export function Rfq({ s, ctx }: SectionProps) {
   const [state, setState] = useState<{ kind: 'idle' | 'sending' | 'done' | 'error'; text?: string; reference?: string }>({ kind: 'idle' });
   const [prefill, setPrefill] = useState<Record<string, unknown> | null>(null);
   useEffect(() => {
-    const load = () => { try { const raw = sessionStorage.getItem(RFQ_PREFILL_KEY); if (raw) { const p = JSON.parse(raw) as Record<string, unknown>; setPrefill(p); if (typeof p.category === 'string') setV((x) => ({ ...x, cat: p.category as string })); } } catch { /* ignore */ } };
+    const load = () => { try { const raw = sessionStorage.getItem(RFQ_PREFILL_KEY); if (raw) { const p = JSON.parse(raw) as Record<string, unknown>; setPrefill(p); if (typeof p.category === 'string') setV((x) => ({ ...x, cat: p.category as string })); if (typeof p.product === 'string') setV((x) => ({ ...x, product: p.product as string })); } } catch { /* ignore */ } };
     load(); window.addEventListener('pc-rfq-prefill', load); return () => window.removeEventListener('pc-rfq-prefill', load);
   }, []);
   const isGov = orgTypes.length === 0 ? v.org === 0 : /gov|حكوم/i.test(bi(orgTypes[v.org], 'label', 'en') + bi(orgTypes[v.org], 'label', 'ar'));
@@ -65,13 +65,13 @@ export function Rfq({ s, ctx }: SectionProps) {
                 {orgTypes.map((o, i) => <span key={i}><input type="radio" name="org" id={`o${i}`} checked={v.org === i} onChange={() => setV({ ...v, org: i })} /><label htmlFor={`o${i}`}>{bi(o, 'label', lang)}</label></span>)}
               </fieldset></div>
             ) : null}
-            <div className="field"><label htmlFor="f-name">{u(ui.rfq.name, lang)}</label><input id="f-name" required value={v.name} onChange={set('name')} /></div>
-            <div className="field"><label htmlFor="f-company">{u(ui.rfq.org, lang)}</label><input id="f-company" value={v.company} onChange={set('company')} /></div>
+            <div className="field"><label htmlFor="f-name">{u(ui.rfq.name, lang)}</label><input id="f-name" required value={v.name} onChange={set('name')} placeholder={u(ui.rfq.namePh, lang)} /></div>
+            <div className="field"><label htmlFor="f-company">{u(ui.rfq.org, lang)}</label><input id="f-company" value={v.company} onChange={set('company')} placeholder={u(ui.rfq.orgPh, lang)} /></div>
             <div className="field"><label htmlFor="f-phone">{u(ui.rfq.phone, lang)}</label><input id="f-phone" inputMode="numeric" dir="ltr" placeholder="05XXXXXXXX" value={v.phone} onChange={set('phone')} /></div>
             <div className="field"><label htmlFor="f-email">{u(ui.rfq.email, lang)}</label><input id="f-email" type="email" dir="ltr" value={v.email} onChange={set('email')} /></div>
             {cats.length ? <div className="field"><label htmlFor="f-cat">{u(ui.rfq.category, lang)}</label><select id="f-cat" value={v.cat} onChange={set('cat')}>{cats.map((c) => <option key={str(c.id)} value={str(c.id)}>{bi(c, 'name', lang)}</option>)}</select></div> : null}
-            {isGov ? <div className="field full"><label htmlFor="f-tender">{u(ui.rfq.tender, lang)}</label><input id="f-tender" dir="ltr" value={v.tender} onChange={set('tender')} /></div> : null}
-            <div className="field full"><label htmlFor="f-product">{u(ui.rfq.product, lang)}</label><textarea id="f-product" value={v.product} onChange={set('product')} /></div>
+            {isGov ? <div className="field full"><label htmlFor="f-tender">{u(ui.rfq.tender, lang)}</label><input id="f-tender" dir="ltr" value={v.tender} onChange={set('tender')} placeholder="260139001234" /></div> : null}
+            <div className="field full"><label htmlFor="f-product">{u(ui.rfq.product, lang)}</label><textarea id="f-product" value={v.product} onChange={set('product')} placeholder={u(ui.rfq.productPh, lang)} /></div>
             <div className="field full"><fieldset className="seg"><legend>{u(ui.rfq.urgency, lang)}</legend>
               {ui.rfq.urgencies.map((x, i) => <span key={i}><input type="radio" name="urg" id={`u${i}`} checked={v.urg === i} onChange={() => setV({ ...v, urg: i })} /><label htmlFor={`u${i}`}>{u(x, lang)}</label></span>)}
             </fieldset></div>

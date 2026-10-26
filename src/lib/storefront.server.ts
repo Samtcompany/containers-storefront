@@ -14,6 +14,9 @@ export async function getStorefront(): Promise<PublishedStorefront | null> {
     const { readFileSync } = await import('node:fs');
     return JSON.parse(readFileSync(SNAPSHOT_FILE, 'utf8')) as PublishedStorefront;
   }
+  // Live: every page is rendered at request time, never frozen into the build (`connection()` is Next's way to say so).
+  const { connection } = await import('next/server');
+  await connection();
   if (cache && Date.now() - cache.at < TTL_MS) return cache.value;
   try {
     const res = await fetch(`${apiBase()}/api/v1/public/storefront/${encodeURIComponent(slug())}/config`, { cache: 'no-store' });

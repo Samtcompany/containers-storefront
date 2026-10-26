@@ -17,7 +17,12 @@ The sixteen section kinds (hero, clients, story, shop, import, containers, calc,
 shipping, certs, tracking, gov, compliance, faq, blog, rfq) draw only when enabled and in the
 published order. Arabic is the default (`/`), English at `/en`. The import-cost calculator reads
 every rate from `calculator`; the assistant answers from `assistant.kb` and the FAQ only and
-logs what it cannot answer. No cart, checkout, order, payment or invoice (SF-3); no model (SF-4).
+logs what it cannot answer. The store (`/store`) lists the products Aamer's overlay marks visible
+(`products` in the public configuration) under the shop section's categories; the cart lives in the
+visitor's browser and its checkout (cart → delivery → confirmation) ends in a **quote request**
+through `POST …/requests` (kind `quote`, the cart in the payload) — no payment, no order, no invoice
+(decisions 1 and 2 are deferred). Tracking draws the illustrative references the document declares
+in `tracking.items`; every other reference is answered as not found until SF-3. No model (SF-4).
 
 ## Run it
 

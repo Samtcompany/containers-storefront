@@ -42,7 +42,10 @@
     "addressEn": "",
     "workingHoursAr": "الأحد إلى الخميس، من 9 صباحاً إلى 6 مساءً",
     "workingHoursEn": "Sunday to Thursday, 9am to 6pm",
-    "note": "رقم الواتساب وبريد الإشعارات يُملآن من إدارة المتجر قبل النشر للجمهور."
+    "note": "رقم الواتساب وبريد الإشعارات يُملآن من إدارة المتجر قبل النشر للجمهور.",
+    "deliveryPartnersAr": "سمسا · أرامكس · DHL · فيديكس · سبل",
+    "deliveryPartnersEn": "SMSA · Aramex · DHL · FedEx · SPL",
+    "crNumber": ""
   },
   "sections": [
     {
@@ -59,8 +62,8 @@
         "primaryCtaAr": "تسوّق من المتجر",
         "primaryCtaEn": "Shop the store",
         "primaryCtaHref": "#store",
-        "secondaryCtaAr": "",
-        "secondaryCtaEn": "",
+        "secondaryCtaAr": "احصل على عرض سعر للاستيراد",
+        "secondaryCtaEn": "Get an import quote",
         "secondaryCtaHref": "#rfq",
         "ticker": [
           "SHANGHAI → JEDDAH",
@@ -229,7 +232,132 @@
         "leadEn": "Carefully imported, compliant with Saudi standards, and packed within hours of your order.",
         "readyTitleAr": "جاهزة للتوصيل",
         "readyTitleEn": "Ready to ship",
-        "note": "المنتجات تأتي من طبقة المتجر على الأصناف (sf_products) — الدفعة SF-3."
+        "note": "المنتجات من طبقة المتجر على الأصناف (sf_products) عبر GET …/config → products. شارة التوفر (badge): in_stock · low:N · soon حتى يُربط المخزون في SF-3.",
+        "enterAr": "ادخل المتجر",
+        "enterEn": "Enter the store",
+        "moreAr": "عرض المزيد",
+        "moreEn": "View more",
+        "noteAr": "المنتجات والأسعار أمثلة توضّح شكل المتجر.",
+        "noteEn": "Products and prices are examples to show how the store will look.",
+        "strip": [
+          {
+            "titleAr": "توصيل خلال ⁦2–7⁩ أيام",
+            "titleEn": "Delivery in ⁦2–7⁩ days",
+            "textAr": "مع تتبّع مباشر عبر سمسا وأرامكس وغيرهما",
+            "textEn": "Live tracking with SMSA, Aramex and others"
+          },
+          {
+            "titleAr": "طرق الدفع",
+            "titleEn": "Payment methods",
+            "pay": [
+              "مدى",
+              "Apple Pay",
+              "Visa / MC",
+              "تابي",
+              "تمارا"
+            ],
+            "payEn": [
+              "mada",
+              "Apple Pay",
+              "Visa / MC",
+              "Tabby",
+              "Tamara"
+            ]
+          },
+          {
+            "titleAr": "قسّطها على 4 دفعات",
+            "titleEn": "Split into 4 payments",
+            "textAr": "عبر تابي للطلبات من 200 ر.س",
+            "textEn": "With Tabby on orders from SAR 200"
+          },
+          {
+            "titleAr": "إرجاع خلال 7 أيام",
+            "titleEn": "7-day returns",
+            "textAr": "وفق سياسة الإرجاع، واستبدال ما يصل معيباً",
+            "textEn": "Per our returns policy, with replacement of items that arrive defective"
+          }
+        ],
+        "checkout": {
+          "minOrder": 50,
+          "freeShippingFrom": 500,
+          "vatRate": 0.15,
+          "cities": [
+            [
+              "riyadh",
+              "الرياض",
+              "Riyadh",
+              19,
+              "1–2"
+            ],
+            [
+              "jeddah",
+              "جدة",
+              "Jeddah",
+              29,
+              "2–4"
+            ],
+            [
+              "makkah",
+              "مكة المكرمة",
+              "Makkah",
+              29,
+              "2–4"
+            ],
+            [
+              "madinah",
+              "المدينة المنورة",
+              "Madinah",
+              29,
+              "2–4"
+            ],
+            [
+              "dammam",
+              "الدمام",
+              "Dammam",
+              29,
+              "2–3"
+            ],
+            [
+              "khobar",
+              "الخبر",
+              "Khobar",
+              29,
+              "2–3"
+            ],
+            [
+              "taif",
+              "الطائف",
+              "Taif",
+              35,
+              "3–5"
+            ],
+            [
+              "buraydah",
+              "بريدة",
+              "Buraydah",
+              35,
+              "3–5"
+            ],
+            [
+              "abha",
+              "أبها",
+              "Abha",
+              35,
+              "4–7"
+            ],
+            [
+              "tabuk",
+              "تبوك",
+              "Tabuk",
+              35,
+              "4–7"
+            ]
+          ],
+          "noteAr": "شحن مجاني للطلبات من 500 ر.س. أسعار الشحن هنا أمثلة.",
+          "noteEn": "Free shipping on orders from SAR 500. Shipping rates here are examples.",
+          "paymentNoteAr": "الدفع يُرتَّب مع فريقنا بعد تأكيد الطلب: تحويل بنكي، مدى، Apple Pay أو البطاقة. بوابة الدفع الإلكترونية تُفعَّل لاحقاً.",
+          "paymentNoteEn": "Payment is arranged with our team after the order is confirmed: bank transfer, mada, Apple Pay or card. The online payment gateway is enabled later."
+        }
       },
       "items": [
         {
@@ -1389,11 +1517,42 @@
         "leadAr": "أدخل الرقم المرجعي الذي وصلك في رسالة التأكيد لترى المرحلة الحالية وما بعدها.",
         "leadEn": "Enter the reference number from your confirmation message to see the current stage and what comes next.",
         "placeholder": true,
-        "placeholderAr": "التتبّع الحقيقي يُربط بطلبات عامر في الدفعة SF-3.",
-        "placeholderEn": "Live tracking is connected to Amer orders in batch SF-3.",
-        "referencePattern": "SF-YYYY-NNNNN"
+        "placeholderAr": "تأكد من الرقم كما ورد في رسالة التأكيد، أو تواصل معنا عبر واتساب. التتبّع الحقيقي يُربط بطلبات عامر في الدفعة SF-3.",
+        "placeholderEn": "Check the number as it appears in your confirmation, or message us on WhatsApp. Live tracking is connected to Amer orders in batch SF-3.",
+        "referencePattern": "SF-YYYY-NNNNN",
+        "demoAr": "جرّب الأرقام التجريبية:",
+        "demoEn": "Try the demo references:"
       },
-      "items": []
+      "items": [
+        {
+          "reference": "SF-2026-10342",
+          "journey": "rfq",
+          "stage": 5,
+          "customerAr": "مؤسسة الريان للتجهيزات الطبية",
+          "customerEn": "Al-Rayyan Medical Supplies",
+          "itemAr": "قفازات نيتريل، 20,000 علبة",
+          "itemEn": "Nitrile gloves, 20,000 boxes",
+          "etaAr": "الوصول المتوقع إلى ميناء جدة: 12 نوفمبر 2026",
+          "etaEn": "Expected at Jeddah port: 12 Nov 2026",
+          "extraAr": "السفينة: PRIME TRADER · B/L SHJED-77120",
+          "extraEn": "Vessel: PRIME TRADER · B/L SHJED-77120",
+          "illustrative": true
+        },
+        {
+          "reference": "SF-2026-55120",
+          "journey": "local",
+          "stage": 4,
+          "customerAr": "عبدالله السبيعي",
+          "customerEn": "Abdullah Alsubaie",
+          "itemAr": "3 منتجات · 1,254.40 ر.س",
+          "itemEn": "3 items · SAR 1,254.40",
+          "etaAr": "التوصيل المتوقع إلى جدة: غداً قبل 6 مساءً",
+          "etaEn": "Expected in Jeddah: tomorrow before 6pm",
+          "extraAr": "سمسا · رقم التتبّع 2884 1190 7732",
+          "extraEn": "SMSA · tracking 2884 1190 7732",
+          "illustrative": true
+        }
+      ]
     },
     {
       "id": "gov",

@@ -751,8 +751,8 @@ form .btn{grid-column:1/-1;padding-block:12px}
 .article .cta{margin-top:34px;padding:22px;border-radius:12px;background:var(--navy);color:var(--on-navy);display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
 .article .cta b{font-family:var(--f-display);font-size:1.05rem}
 .article .next{margin-top:28px;display:grid;gap:8px}
-.article .next button{font:inherit;text-align:start;background:var(--white);border:1px solid var(--line);border-radius:10px;padding:12px 16px;cursor:pointer;color:var(--ink);display:flex;justify-content:space-between;gap:10px}
-.article .next button:hover{border-color:var(--steel)}
+.article .next a,.article .next button{font:inherit;text-align:start;background:var(--white);border:1px solid var(--line);border-radius:10px;padding:12px 16px;cursor:pointer;color:var(--ink);display:flex;justify-content:space-between;gap:10px}
+.article .next a:hover,.article .next button:hover{border-color:var(--steel)}
 /* sound toggle */
 .snd{width:34px;height:34px;border-radius:7px;border:1px solid var(--line);background:var(--white);color:var(--muted);display:grid;place-items:center;cursor:pointer;flex:none}
 .snd[aria-pressed="true"]{color:var(--steel);border-color:var(--steel)}

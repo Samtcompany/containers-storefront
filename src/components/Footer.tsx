@@ -17,12 +17,13 @@ export function Footer({ lang, config }: { lang: Lang; config: StorefrontConfig 
           </div>
           <div className="contact">
             <b>{u(ui.footer.contact, lang)}</b>
-            {phone ? <span className="ph"><span>{u(ui.footer.mobile, lang)}</span> <span className="mono" dir="ltr">{phone}</span></span> : null}
-            {email ? <span className="ph"><span>{u(ui.footer.email, lang)}</span> <span className="mono" dir="ltr">{email}</span></span> : null}
-            {cr ? <span className="ph"><span>{u(ui.footer.cr, lang)}</span> <span className="mono" dir="ltr">{cr}</span></span> : null}
+            {/* The three lines are always shown; a dash stands where the company has not filled the value yet. */}
+            <span className="ph"><span>{u(ui.footer.mobile, lang)}</span> <span className="mono" dir="ltr">{phone || u(ui.footer.tbd, lang)}</span></span>
+            <span className="ph"><span>{u(ui.footer.email, lang)}</span> <span className="mono" dir="ltr">{email || u(ui.footer.tbd, lang)}</span></span>
+            <span className="ph"><span>{u(ui.footer.cr, lang)}</span> <span className="mono" dir="ltr">{cr || u(ui.footer.tbd, lang)}</span></span>
             {hours ? <span className="ph"><span>{u(ui.footer.hours, lang)}</span> {hours}</span> : null}
           </div>
-          {str(c.deliveryPartners) ? <div className="contact"><b>{u(ui.footer.partners, lang)}</b><span className="ph">{str(c.deliveryPartners)}</span></div> : null}
+          {bi(c, 'deliveryPartners', lang) || str(c.deliveryPartners) ? <div className="contact"><b>{u(ui.footer.partners, lang)}</b><span className="ph">{bi(c, 'deliveryPartners', lang) || str(c.deliveryPartners)}</span></div> : null}
         </div>
       </footer>
     </>

@@ -17,13 +17,17 @@ if (!file || !existsSync(file)) { console.error('usage: npm run snapshot -- <cap
 
 // The middleware and the catch-all route are live-only; a static export has neither.
 const aside = [['src/middleware.ts', '.snapshot-aside/middleware.ts'], ['src/app/[lang]/[...rest]', '.snapshot-aside/rest']];
+// The article route: the live file answers any slug; the export needs the slugs, so its variant takes the file's place.
+const ARTICLE = 'src/app/[lang]/blog/[slug]/page.tsx', ARTICLE_SNAPSHOT = 'src/app/[lang]/blog/[slug]/page.snapshot.tsx', ARTICLE_ASIDE = '.snapshot-aside/article-page.tsx';
 mkdirSync(join(root, '.snapshot-aside'), { recursive: true });
 for (const [a, b] of aside) if (existsSync(join(root, a))) renameSync(join(root, a), join(root, b));
+renameSync(join(root, ARTICLE), join(root, ARTICLE_ASIDE)); cpSync(join(root, ARTICLE_SNAPSHOT), join(root, ARTICLE));
 try {
   rmSync(join(root, 'out'), { recursive: true, force: true });
   execSync('npx next build', { stdio: 'inherit', env: { ...process.env, STOREFRONT_SNAPSHOT: '1', STOREFRONT_SNAPSHOT_FILE: join(root, file), NEXT_PUBLIC_SNAPSHOT: '1' } });
 } finally {
   for (const [a, b] of aside) if (existsSync(join(root, b))) renameSync(join(root, b), join(root, a));
+  if (existsSync(join(root, ARTICLE_ASIDE))) { rmSync(join(root, ARTICLE), { force: true }); renameSync(join(root, ARTICLE_ASIDE), join(root, ARTICLE)); }
 }
 
 const out = join(root, 'out'), site = join(root, 'site');
