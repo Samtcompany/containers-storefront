@@ -31,13 +31,16 @@ rmSync(site, { recursive: true, force: true }); mkdirSync(site);
 cpSync(join(out, 'ar'), site, { recursive: true });
 cpSync(join(out, 'en'), join(site, 'en'), { recursive: true });
 
+// Some static hosts reserve top-level names starting with `_`, so the export's `_next` is published
+// as `nx`; every reference (HTML, CSS and webpack's public path) is rewritten to match below.
+const ASSETS = 'nx';
 const walk = (dir) => readdirSync(dir).flatMap((n) => { const p = join(dir, n); return statSync(p).isDirectory() ? walk(p) : [p]; });
 const pages = walk(site).filter((p) => p.endsWith('.html'));
 for (const page of pages) {
   const dir = dirname(page);
   const up = relative(dir, site) === '' ? './' : `${relative(dir, site).split('/').map(() => '..').join('/')}/`;
   // Assets: each page directory carries the export's `_next` and the icon, so `./_next/...` resolves.
-  if (!existsSync(join(dir, '_next'))) cpSync(join(out, '_next'), join(dir, '_next'), { recursive: true });
+  if (!existsSync(join(dir, ASSETS))) cpSync(join(out, '_next'), join(dir, ASSETS), { recursive: true });
   if (!existsSync(join(dir, 'icon.svg'))) cpSync(join(out, 'icon.svg'), join(dir, 'icon.svg'));
   let html = readFileSync(page, 'utf8');
   // Links: /ar/x → x (root), /en/x → en/x, both relative to this page; /icon.svg → icon.svg here.
@@ -45,5 +48,12 @@ for (const page of pages) {
     .replace(/(href|src)="\/en(\/[^"#?]*)?(\/)?([#?][^"]*)?"/g, (_, attr, path = '', _slash, tail = '') => `${attr}="${up}en${path}${path && !path.endsWith('/') ? '/' : path ? '' : '/'}${tail}"`)
     .replace(/href="\/icon\.svg"/g, 'href="./icon.svg"');
   writeFileSync(page, html);
+}
+// Rename the asset path in every text file, and spell U+FFFD (a literal inside Next's polyfills)
+// as a JS escape: the same string at runtime, and acceptable to hosts that reject the raw character.
+for (const f of walk(site).filter((p) => /\.(html|js|css|txt)$/.test(p))) {
+  const before = readFileSync(f, 'utf8');
+  const after = before.replaceAll('_next/', `${ASSETS}/`).replaceAll('\uFFFD', '\\uFFFD');
+  if (after !== before) writeFileSync(f, after);
 }
 console.log(`snapshot ready: ${pages.length} pages under site/ (${walk(site).length} files)`);
