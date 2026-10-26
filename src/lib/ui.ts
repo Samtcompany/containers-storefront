@@ -25,6 +25,7 @@ const UI = {
     send: ['أرسل طلب عرض السعر', 'Send quote request'], sending: ['جارٍ الإرسال…', 'Sending…'],
     needName: ['اكتب اسم المسؤول حتى نعرف من نخاطب.', 'Enter a contact name so we know who to reply to.'], needPhone: ['رقم الجوال يبدأ بـ 05 ويتكوّن من 10 أرقام.', 'The mobile number starts with 05 and has 10 digits.'], needProduct: ['اكتب المنتج والكمية.', 'Describe the product and quantity.'],
     done: ['استلمنا طلبك. رقمك المرجعي: ', 'We received your request. Your reference: '], doneHint: ['سيتواصل معك أخصائي المشتريات خلال يوم عمل. احتفظ بالرقم لمتابعة طلبك.', 'A procurement specialist will contact you within a working day. Keep the reference to follow up.'],
+    preview: ['هذه معاينة ثابتة للموقع؛ إرسال الطلبات يعمل في النسخة المنشورة المتصلة بعامر.', 'This is a static preview; sending requests works on the published site connected to Amer.'],
     failed: ['تعذّر إرسال الطلب الآن. حاول مرة أخرى أو راسلنا على واتساب.', 'The request could not be sent right now. Try again or message us on WhatsApp.'], tooMany: ['أرسلت طلبات كثيرة خلال وقت قصير. انتظر قليلاً ثم أعد المحاولة.', 'Too many requests in a short time. Wait a little and try again.'],
   },
   assistant: {

@@ -66,7 +66,7 @@ function Assistant({ lang, config, products, onClose }: { lang: Lang; config: St
     if (/عرض سعر|quote/i.test(q)) { setTimeout(() => document.getElementById('rfq')?.scrollIntoView({ behavior: 'smooth' }), 400); return esc(u(ui.assistant.openedRfq, lang)); }
     const hits = kbSearch(text, q);
     if (hits.length) return hits.map(esc).join('<br>') + `<br><small class="muted">${esc(u(ui.assistant.fromKb, lang))}</small>`;
-    void fetch('/api/unanswered', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ question: q.slice(0, 500), language: lang }) }).catch(() => undefined);
+    if (process.env.NEXT_PUBLIC_SNAPSHOT !== '1') void fetch('/api/unanswered', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ question: q.slice(0, 500), language: lang }) }).catch(() => undefined);
     return esc(u(ui.assistant.noAnswer, lang));
   };
   const send = (q: string) => {

@@ -1,9 +1,8 @@
 import { notFound } from 'next/navigation';
-import { getStorefront, enabledSections } from '@/lib/config';
+import { enabledSections } from '@/lib/config';
+import { getStorefront } from '@/lib/storefront.server';
 import type { Lang } from '@/lib/types';
 import { renderSection } from '@/components/sections';
-
-export const dynamic = 'force-dynamic';
 
 export default async function Home({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;

@@ -6,23 +6,6 @@ import type { JsonObject, JsonValue, Lang, PublishedStorefront, Section } from '
  */
 const API = (process.env.AAMER_API_URL ?? 'http://127.0.0.1:3001').replace(/\/$/, '');
 const SLUG = process.env.STOREFRONT_SLUG ?? 'containers';
-const TTL_MS = 60_000;
-
-let cache: { at: number; value: PublishedStorefront | null } | null = null;
-
-export async function getStorefront(): Promise<PublishedStorefront | null> {
-  if (cache && Date.now() - cache.at < TTL_MS) return cache.value;
-  try {
-    const res = await fetch(`${API}/api/v1/public/storefront/${encodeURIComponent(SLUG)}/config`, { cache: 'no-store' });
-    const value = res.ok ? ((await res.json()) as PublishedStorefront) : null;
-    cache = { at: Date.now(), value };
-    return value;
-  } catch {
-    cache = { at: Date.now(), value: null };
-    return null;
-  }
-}
-
 export const apiBase = () => API;
 export const slug = () => SLUG;
 

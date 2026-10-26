@@ -24,6 +24,7 @@ export function Rfq({ s, ctx }: SectionProps) {
     if (!v.name.trim()) return setState({ kind: 'error', text: u(ui.rfq.needName, lang) });
     if (!/^05\d{8}$/.test(v.phone.trim())) return setState({ kind: 'error', text: u(ui.rfq.needPhone, lang) });
     if (!v.product.trim()) return setState({ kind: 'error', text: u(ui.rfq.needProduct, lang) });
+    if (process.env.NEXT_PUBLIC_SNAPSHOT === '1') return setState({ kind: 'error', text: u(ui.rfq.preview, lang) });
     setState({ kind: 'sending' });
     const category = cats.find((c) => str(c.id) === v.cat);
     const payload = {

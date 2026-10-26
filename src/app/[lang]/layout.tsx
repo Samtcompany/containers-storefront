@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import '../globals.css';
-import { getStorefront, bi, str, enabledSections, section } from '@/lib/config';
+import { bi, str, enabledSections, section } from '@/lib/config';
+import { getStorefront } from '@/lib/storefront.server';
 import type { Lang } from '@/lib/types';
 import { dirOf, u, ui } from '@/lib/ui';
 import { Header } from '@/components/Header';
@@ -9,8 +10,8 @@ import { Footer } from '@/components/Footer';
 import { Floats } from '@/components/Floats';
 import { Reveal } from '@/components/Reveal';
 
-// Rendered on demand, never at build time: the page IS the published configuration of the moment.
-export const dynamic = 'force-dynamic';
+// Live: the no-store read of Aamer keeps every render on demand. Snapshot: the two languages are exported.
+export function generateStaticParams() { return [{ lang: 'ar' }, { lang: 'en' }]; }
 
 const FONTS = 'https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700;800&family=Readex+Pro:wght@300;400;500;600&family=JetBrains+Mono:wght@500;700&display=swap';
 const THEME_INIT = `try{var m=localStorage.getItem('pc-mode');if(m==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}`;
