@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import type { Lang, StorefrontConfig } from '@/lib/types';
 import { u, ui } from '@/lib/ui';
 import { Brand } from './Logo';
@@ -19,6 +20,10 @@ export function Header({ lang, config, enabled }: { lang: Lang; config: Storefro
   const items = NAV.filter((n) => enabled.includes(n.id));
   const extra = MOBILE_EXTRA.filter((n) => enabled.includes(n.id));
   const home = `/${lang}`;
+  const pathname = usePathname() ?? home;
+  const other: Lang = lang === 'en' ? 'ar' : 'en';
+  // The same page in the other language. A static snapshot rewrites this to a relative address at build time.
+  const switchTo = `/${other}${pathname.replace(/^\/(ar|en)/, '')}`;
 
   useEffect(() => {
     setDark(document.documentElement.getAttribute('data-mode') === 'dark');
@@ -39,11 +44,6 @@ export function Header({ lang, config, enabled }: { lang: Lang; config: Storefro
     if (next) document.documentElement.setAttribute('data-mode', 'dark'); else document.documentElement.removeAttribute('data-mode');
     try { localStorage.setItem('pc-mode', next ? 'dark' : 'light'); } catch { /* storage unavailable */ }
   };
-  const other: Lang = lang === 'en' ? 'ar' : 'en';
-  const switchHref = () => {
-    if (typeof window === 'undefined') return `/${other}`;
-    return window.location.pathname.replace(/^\/(ar|en)/, `/${other}`) + window.location.hash;
-  };
 
   return (
     <header className={`site${scrolled ? ' scrolled' : ''}`} id="hdr">
@@ -56,7 +56,7 @@ export function Header({ lang, config, enabled }: { lang: Lang; config: Storefro
           <svg className="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" /></svg>
           <svg className="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M20 14.5A8 8 0 1 1 9.5 4 6.5 6.5 0 0 0 20 14.5z" /></svg>
         </button>
-        <a className="icon-btn lang-btn" href={`/${other}`} onClick={(e) => { e.preventDefault(); window.location.href = switchHref(); }} aria-label={u(ui.langSwitch, lang)}>{u(ui.langLabel, lang)}</a>
+        <a className="icon-btn lang-btn" href={switchTo} onClick={process.env.NEXT_PUBLIC_SNAPSHOT === '1' ? undefined : (e) => { e.preventDefault(); window.location.href = switchTo + window.location.hash; }} aria-label={u(ui.langSwitch, lang)}>{u(ui.langLabel, lang)}</a>
         <button className="icon-btn menu-btn" type="button" aria-expanded={menu} aria-controls="mnav" aria-label={u(ui.menu, lang)} onClick={() => setMenu(!menu)}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
         </button>
