@@ -8,4 +8,5 @@ next-env.d.ts
 out
 site
 .snapshot-aside
-snapshot/
+snapshot/*
+!snapshot/prime-containers.preview.json

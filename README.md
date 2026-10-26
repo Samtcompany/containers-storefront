@@ -43,3 +43,10 @@ npm run verify              # typecheck + unit tests + production build
 
 `tests/fixtures/prime-containers.v1.json` is the document Aamer imported as version 1 — the
 approved prototype's content — and what the unit tests pin the calculator and assistant against.
+
+## Hosting
+
+| What | Where | How |
+| --- | --- | --- |
+| Static preview (no Aamer; forms are previews) | GitHub Pages, free | `.github/workflows/pages.yml` runs on every push to `main`: it exports `snapshot/prime-containers.preview.json` and publishes `site/`. Enable once: repository Settings → Pages → Source **GitHub Actions**. |
+| Live site (reads Aamer, sends requests) | Vercel (free Hobby) or any Docker host (Railway, Fly, Render) | Vercel: import the repository, set `AAMER_API_URL`, `STOREFRONT_SLUG`, `SITE_ORIGIN`. Docker: `Dockerfile` builds the standalone server on port 3100 with the same three variables. Aamer must be reachable from the host and list the site's origin in `STOREFRONT_PUBLIC_ORIGINS`. |

@@ -10,7 +10,8 @@ const snapshot = process.env.STOREFRONT_SNAPSHOT === '1';
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-  ...(snapshot ? { output: 'export', trailingSlash: true, assetPrefix: './', images: { unoptimized: true } } : {}),
+  // Live builds are self-contained (`.next/standalone`) so one container runs them; see Dockerfile.
+  ...(snapshot ? { output: 'export', trailingSlash: true, assetPrefix: './', images: { unoptimized: true } } : { output: 'standalone' }),
 };
 
 export default nextConfig;
