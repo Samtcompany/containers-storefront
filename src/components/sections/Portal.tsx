@@ -161,6 +161,13 @@ function DealView({ deal, lang, mobile, why, setWhy, note, setNote, after, reque
           </section>
         ) : null}
 
+        {deal.refunds.length ? (
+          <section>
+            <h4 className="portal-h">{u(p.refunds, lang)}</h4>
+            <ul className="portal-list">{deal.refunds.map((r) => <li key={r.id}><span>{r.label}<br /><small className="muted num" dir="ltr">{r.dueDate}</small></span><span className="portal-pay">{money(r.amountMinor, r.currency)}<span className={`portal-st st-${r.paid ? 'paid' : 'verifying'}`}>{u(r.paid ? p.refundPaid : p.refundDue, lang)}</span></span></li>)}</ul>
+          </section>
+        ) : null}
+
         {deal.inspection ? (
           <section>
             <h4 className="portal-h">{u(p.inspection, lang)}</h4>

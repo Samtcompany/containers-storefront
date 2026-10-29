@@ -19,6 +19,7 @@ export type CustomerDeal = {
   quote: { version: number; date: string; totalMinor: number; currency: string; decision: string | null; decidedAt: string | null; validUntil: string | null } | null;
   brokerage: { feeBasis: 'fixed' | 'percent'; feeAmountMinor: number | null; feeRateBp: number | null; importerOfRecord: string | null; factoryPayer: string | null; acceptedAt: string | null; factory: string | null } | null;
   payments: CustomerPayment[];
+  refunds: Array<{ id: string; label: string; dueDate: string; amountMinor: number; currency: string; paid: boolean }>;
   invoices: Array<{ no: string; date: string; amountMinor: number; currency: string; status: string; zatca: string | null }>;
   inspection: { date: string; result: string; defectsPct: number | null; aql: string | null } | null;
   shipments: Array<{ id: string; mode: string; bl: string | null; pol: string; pod: string; etd: string | null; atd: string | null; eta: string | null; ata: string | null; status: string; containers: Array<{ no: string; size: string }> }>;
