@@ -22,7 +22,7 @@ export type CustomerDeal = {
   refunds: Array<{ id: string; label: string; dueDate: string; amountMinor: number; currency: string; paid: boolean }>;
   invoices: Array<{ no: string; date: string; amountMinor: number; currency: string; status: string; zatca: string | null }>;
   inspection: { date: string; result: string; defectsPct: number | null; aql: string | null } | null;
-  shipments: Array<{ id: string; mode: string; bl: string | null; pol: string; pod: string; etd: string | null; atd: string | null; eta: string | null; ata: string | null; status: string; containers: Array<{ no: string; size: string }> }>;
+  shipments: Array<{ id: string; mode: string; bl: string | null; shared: boolean; qty: number; pol: string; pod: string; etd: string | null; atd: string | null; eta: string | null; ata: string | null; status: string; containers: Array<{ no: string; size: string }> }>;
   documents: Array<{ kind: string; name: string; date: string | null }>;
   deliveryConfirmed: boolean; inspectionAcknowledged: boolean;
   actions: { acceptQuote: boolean; acceptFees: boolean; pay: string[]; acknowledgeInspection: boolean; confirmDelivery: boolean };

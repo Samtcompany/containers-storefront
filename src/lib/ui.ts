@@ -86,7 +86,7 @@ const UI = {
     refunds: ['مبالغ مستحقة لك', 'Amounts due to you'], refundPaid: ['رُدّت', 'Refunded'], refundDue: ['ستُرد', 'To be refunded'],
     payNote: ['الدفع هنا عبر بوابة محاكاة. لا تُعد الدفعة مدفوعة حتى تتحقق المالية من التسوية.', 'Payment here goes through a simulated gateway. It counts as paid only after Finance verifies the settlement.'],
     invoices: ['فواتيرك الضريبية', 'Your tax invoices'], inspection: ['نتيجة الفحص قبل الشحن', 'Pre-shipment inspection'], passed: ['مقبول', 'Passed'], failed: ['غير مقبول', 'Failed'], conditional: ['مقبول بشروط', 'Conditional'], defects: ['نسبة العيوب', 'Defects'], ack: ['اطلعت على النتيجة وأعتمدها', 'I have seen and accept the result'], acked: ['اعتمدتَ نتيجة الفحص', 'You accepted the result'],
-    shipments: ['الشحنات', 'Shipments'], bl: ['بوليصة الشحن', 'Bill of lading'], etd: ['المغادرة', 'Departure'], eta: ['الوصول', 'Arrival'], containers: ['الحاويات', 'Containers'],
+    shipments: ['الشحنات', 'Shipments'], shared: ['شحنة مجمّعة مع بضائع أخرى — مستنداتك الخاصة يرسلها فريقنا', 'Consolidated with other goods — our team sends your own documents'], yourQty: ['كميتك فيها', 'Your quantity'], bl: ['بوليصة الشحن', 'Bill of lading'], etd: ['المغادرة', 'Departure'], eta: ['الوصول', 'Arrival'], containers: ['الحاويات', 'Containers'],
     documents: ['مستنداتك', 'Your documents'], confirmDelivery: ['أؤكد استلام البضاعة', 'I confirm receipt'], deliveryNote: ['ملاحظة على الاستلام (اختياري)', 'Note on receipt (optional)'], delivered: ['أكدتَ الاستلام', 'You confirmed receipt'],
     failedAction: ['تعذر تنفيذ الطلب: ', 'Could not complete: '], doneAction: ['تم. سيرى فريقنا ذلك فورًا.', 'Done. Our team sees it right away.'], openPortal: ['تابع طلبك', 'Follow your request'],
   },

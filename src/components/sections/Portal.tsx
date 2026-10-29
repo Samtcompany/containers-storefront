@@ -186,7 +186,7 @@ function DealView({ deal, lang, mobile, why, setWhy, note, setNote, after, reque
             <ul className="portal-list">
               {deal.shipments.map((s) => (
                 <li key={s.id}>
-                  <span>{s.pol} ← {s.pod}<br /><small className="muted">{u(p.bl, lang)}: <span className="mono" dir="ltr">{s.bl ?? '—'}</span> · {u(p.containers, lang)}: <span className="mono" dir="ltr">{s.containers.map((c) => c.no).join(', ') || '—'}</span></small></span>
+                  <span>{s.pol} ← {s.pod}<br /><small className="muted">{s.shared ? <>{u(p.shared, lang)} · {u(p.yourQty, lang)}: <span className="num" dir="ltr">{s.qty}</span></> : <>{u(p.bl, lang)}: <span className="mono" dir="ltr">{s.bl ?? '—'}</span> · {u(p.containers, lang)}: <span className="mono" dir="ltr">{s.containers.map((c) => c.no).join(', ') || '—'}</span></>}</small></span>
                   <span><small>{u(p.etd, lang)} <span className="num" dir="ltr">{s.atd ?? s.etd ?? '—'}</span></small><br /><small>{u(p.eta, lang)} <span className="num" dir="ltr">{s.ata ?? s.eta ?? '—'}</span></small></span>
                 </li>
               ))}
