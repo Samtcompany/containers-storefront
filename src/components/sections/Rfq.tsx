@@ -4,6 +4,7 @@ import { bi, objects, str } from '@/lib/config';
 import { u, ui } from '@/lib/ui';
 import { RFQ_PREFILL_KEY } from './Calculator';
 import type { SectionProps } from './shared';
+import { door, prototype, rememberMine } from '@/lib/door';
 
 /** The quote form → POST /api/requests → Aamer's public door. The reference the door minted is the whole confirmation. */
 export function Rfq({ s, ctx }: SectionProps) {
@@ -24,7 +25,7 @@ export function Rfq({ s, ctx }: SectionProps) {
     if (!v.name.trim()) return setState({ kind: 'error', text: u(ui.rfq.needName, lang) });
     if (!/^05\d{8}$/.test(v.phone.trim())) return setState({ kind: 'error', text: u(ui.rfq.needPhone, lang) });
     if (!v.product.trim()) return setState({ kind: 'error', text: u(ui.rfq.needProduct, lang) });
-    if (process.env.NEXT_PUBLIC_SNAPSHOT === '1') return setState({ kind: 'error', text: u(ui.rfq.preview, lang) });
+    if (process.env.NEXT_PUBLIC_SNAPSHOT === '1' && !prototype) return setState({ kind: 'error', text: u(ui.rfq.preview, lang) });
     setState({ kind: 'sending' });
     const category = cats.find((c) => str(c.id) === v.cat);
     const payload = {
@@ -32,15 +33,23 @@ export function Rfq({ s, ctx }: SectionProps) {
       category: v.cat, categoryName: category ? bi(category, 'name', 'ar') : null, tender: v.tender.trim() || null,
       urgency: ui.rfq.urgencies[v.urg]?.[1] ?? null, estimate: prefill?.estimate ?? null, calculatorInput: prefill?.input ?? null,
     };
+    const body = { kind: 'quote', customerName: v.name.trim(), organization: v.company.trim() || null, email: v.email.trim() || null, phone: `+966${v.phone.trim().slice(1)}`, message: v.product.trim(), payload, source: { page: 'rfq', lang, path: window.location.pathname } };
+    if (prototype) {
+      const r = door()?.submitRequest(body);
+      if (!r || !r.reference) return setState({ kind: 'error', text: u(ui.rfq.failed, lang) });
+      rememberMine(r.reference, v.phone.trim());
+      try { sessionStorage.removeItem(RFQ_PREFILL_KEY); } catch { /* ignore */ }
+      return setState({ kind: 'done', reference: r.reference });
+    }
     try {
       const res = await fetch('/api/requests', {
         method: 'POST', headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ kind: 'quote', customerName: v.name.trim(), organization: v.company.trim() || null, email: v.email.trim() || null, phone: `+966${v.phone.trim().slice(1)}`, message: v.product.trim(), payload, source: { page: 'rfq', lang, path: window.location.pathname } }),
+        body: JSON.stringify(body),
       });
       if (res.status === 429) return setState({ kind: 'error', text: u(ui.rfq.tooMany, lang) });
       if (!res.ok) return setState({ kind: 'error', text: u(ui.rfq.failed, lang) });
-      const body = (await res.json()) as { reference?: string };
-      setState({ kind: 'done', reference: body.reference });
+      const reply = (await res.json()) as { reference?: string };
+      setState({ kind: 'done', reference: reply.reference });
       try { sessionStorage.removeItem(RFQ_PREFILL_KEY); } catch { /* ignore */ }
     } catch { setState({ kind: 'error', text: u(ui.rfq.failed, lang) }); }
   };
@@ -57,6 +66,7 @@ export function Rfq({ s, ctx }: SectionProps) {
         {state.kind === 'done' ? (
           <div className="done" role="status" style={{ display: 'block' }}>
             <b>{u(ui.rfq.done, lang)}<span className="mono" dir="ltr">{state.reference}</span></b><br />{u(ui.rfq.doneHint, lang)}
+            {prototype && state.reference ? <><br /><a className="btn btn-primary" style={{ marginTop: 10 }} href={`?track=${state.reference}#tracking`}>{u(ui.portal.openPortal, lang)}</a></> : null}
           </div>
         ) : (
           <form noValidate onSubmit={submit}>

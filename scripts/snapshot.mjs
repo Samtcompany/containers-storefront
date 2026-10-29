@@ -6,6 +6,10 @@
  * own copy of `_next/` (the export references assets relatively), and every internal link made
  * relative. The result is `site/`. Forms and the assistant's log are previews here; the live site
  * talks to Aamer.
+ *
+ * `PROTOTYPE=1` builds the same export for the integrated experience with Aamer's operations
+ * prototype: the forms and the tracking portal call that prototype's door (`proto/door.js`, which
+ * its packager places beside the pages) instead of showing the preview notice.
  */
 import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative } from 'node:path';
@@ -24,7 +28,7 @@ for (const [a, b] of aside) if (existsSync(join(root, a))) renameSync(join(root,
 renameSync(join(root, ARTICLE), join(root, ARTICLE_ASIDE)); cpSync(join(root, ARTICLE_SNAPSHOT), join(root, ARTICLE));
 try {
   rmSync(join(root, 'out'), { recursive: true, force: true });
-  execSync('npx next build', { stdio: 'inherit', env: { ...process.env, STOREFRONT_SNAPSHOT: '1', STOREFRONT_SNAPSHOT_FILE: join(root, file), NEXT_PUBLIC_SNAPSHOT: '1' } });
+  execSync('npx next build', { stdio: 'inherit', env: { ...process.env, STOREFRONT_SNAPSHOT: '1', STOREFRONT_SNAPSHOT_FILE: join(root, file), NEXT_PUBLIC_SNAPSHOT: '1', ...(process.env.PROTOTYPE === '1' ? { NEXT_PUBLIC_PROTOTYPE: '1' } : {}) } });
 } finally {
   for (const [a, b] of aside) if (existsSync(join(root, b))) renameSync(join(root, b), join(root, a));
   if (existsSync(join(root, ARTICLE_ASIDE))) { rmSync(join(root, ARTICLE), { force: true }); renameSync(join(root, ARTICLE_ASIDE), join(root, ARTICLE)); }
@@ -48,8 +52,8 @@ for (const page of pages) {
   if (!existsSync(join(dir, 'icon.svg'))) cpSync(join(out, 'icon.svg'), join(dir, 'icon.svg'));
   let html = readFileSync(page, 'utf8');
   // Links: /ar/x → x (root), /en/x → en/x, both relative to this page; /icon.svg → icon.svg here.
-  html = html.replace(/(href|src)="\/ar(\/[^"#?]*)?(\/)?([#?][^"]*)?"/g, (_, attr, path = '', _slash, tail = '') => `${attr}="${up}${path.replace(/^\//, '')}${path && !path.endsWith('/') ? '/' : ''}${tail}"`.replace(`"${up}"`, `"${up}"`))
-    .replace(/(href|src)="\/en(\/[^"#?]*)?(\/)?([#?][^"]*)?"/g, (_, attr, path = '', _slash, tail = '') => `${attr}="${up}en${path}${path && !path.endsWith('/') ? '/' : path ? '' : '/'}${tail}"`)
+  html = html.replace(/(href|src)="\/ar(\/[^"#?]*)?(\/)?([#?][^"]*)?"/g, (_, attr, path = '', _slash, tail = '') => `${attr}="${up}${path.replace(/^\//, '')}${path && !path.endsWith('/') && !/\.[a-z0-9]+$/i.test(path) ? '/' : ''}${tail}"`.replace(`"${up}"`, `"${up}"`))
+    .replace(/(href|src)="\/en(\/[^"#?]*)?(\/)?([#?][^"]*)?"/g, (_, attr, path = '', _slash, tail = '') => `${attr}="${up}en${path}${path && !path.endsWith('/') && !/\.[a-z0-9]+$/i.test(path) ? '/' : path ? '' : '/'}${tail}"`)
     .replace(/href="\/icon\.svg"/g, 'href="./icon.svg"');
   writeFileSync(page, html);
 }

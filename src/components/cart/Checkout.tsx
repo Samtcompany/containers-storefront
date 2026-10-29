@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { arr, bi, fmt, isObject, num, str } from '@/lib/config';
 import { u, ui } from '@/lib/ui';
 import { useCart } from './CartProvider';
+import { door, prototype, rememberMine } from '@/lib/door';
 
 /**
  * Three steps — the cart, the delivery address, the confirmation — and the last one is a QUOTE
@@ -39,23 +40,30 @@ export function Checkout() {
     setErrs(e); return Object.keys(e).length === 0;
   };
   const submit = async () => {
-    if (process.env.NEXT_PUBLIC_SNAPSHOT === '1') return setState({ kind: 'error', text: u(ui.rfq.preview, lang) });
+    if (process.env.NEXT_PUBLIC_SNAPSHOT === '1' && !prototype) return setState({ kind: 'error', text: u(ui.rfq.preview, lang) });
     setState({ kind: 'sending' });
     const items = c.lines.map((l) => { const p = c.product(l.id); return { itemId: l.id, sku: p?.sku, name: p?.name, qty: l.qty, unitPrice: p?.price, lineTotal: (p?.price ?? 0) * l.qty }; });
     const message = `${u(ui.checkout.messageHead, lang)}\n${items.map((i) => `• ${i.name} × ${i.qty} = ${fmt(i.lineTotal)} ${u(ui.sar, lang)}`).join('\n')}\n${u(ui.checkout.messageTotal, lang)} ${fmt(total)} ${u(ui.sar, lang)}\n${u(ui.checkout.messageTo, lang)} ${city?.name ?? ''}، ${addr.district}${addr.street ? `، ${addr.street}` : ''}${addr.building ? ` ${addr.building}` : ''}${addr.notes ? `\n${addr.notes}` : ''}`;
+    const body = {
+      kind: 'quote', customerName: addr.name.trim(), organization: null, email: addr.email.trim() || null, phone: `+966${addr.phone.trim().slice(1)}`, message,
+      payload: { origin: 'store-cart', cart: items, subtotal: c.subtotal, shipping: ship, total, vatIncluded: total - total / (1 + vatRate), delivery: { city: addr.city, cityName: city?.name, district: addr.district, street: addr.street, building: addr.building, notes: addr.notes, days: city?.days } },
+      source: { page: 'store-checkout', lang, path: window.location.pathname },
+    };
+    if (prototype) {
+      const r = door()?.submitRequest(body);
+      if (!r || !r.reference) return setState({ kind: 'error', text: u(ui.rfq.failed, lang) });
+      rememberMine(r.reference, addr.phone.trim());
+      setState({ kind: 'done', reference: r.reference }); setStep(2); return;
+    }
     try {
       const res = await fetch('/api/requests', {
         method: 'POST', headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          kind: 'quote', customerName: addr.name.trim(), organization: null, email: addr.email.trim() || null, phone: `+966${addr.phone.trim().slice(1)}`, message,
-          payload: { origin: 'store-cart', cart: items, subtotal: c.subtotal, shipping: ship, total, vatIncluded: total - total / (1 + vatRate), delivery: { city: addr.city, cityName: city?.name, district: addr.district, street: addr.street, building: addr.building, notes: addr.notes, days: city?.days } },
-          source: { page: 'store-checkout', lang, path: window.location.pathname },
-        }),
+        body: JSON.stringify(body),
       });
       if (res.status === 429) return setState({ kind: 'error', text: u(ui.rfq.tooMany, lang) });
       if (!res.ok) return setState({ kind: 'error', text: u(ui.rfq.failed, lang) });
-      const body = (await res.json()) as { reference?: string };
-      setState({ kind: 'done', reference: body.reference }); setStep(2);
+      const reply = (await res.json()) as { reference?: string };
+      setState({ kind: 'done', reference: reply.reference }); setStep(2);
     } catch { setState({ kind: 'error', text: u(ui.rfq.failed, lang) }); }
   };
   const steps = [ui.checkout.stepCart, ui.checkout.stepDelivery, ui.checkout.stepConfirm];
@@ -107,6 +115,7 @@ export function Checkout() {
                   <dt>{u(ui.checkout.total, lang)}</dt><dd>{money(total)}</dd>
                   <dt>{u(ui.checkout.city, lang)}</dt><dd>{city?.name} · {city?.days} {u(ui.days, lang)}</dd>
                 </dl></div>
+                {prototype && state.reference ? <a className="btn btn-accent" href={`${window.location.pathname.replace(/store\/?(index\.html)?$/, '')}?track=${state.reference}#tracking`}>{u(ui.portal.openPortal, lang)}</a> : null}
                 <button type="button" className="btn btn-primary" onClick={close}>{u(ui.checkout.finish, lang)}</button>
               </div>
             ) : null}

@@ -50,6 +50,9 @@ export default async function LangLayout({ children, params }: { children: React
         <link rel="stylesheet" href={FONTS} />
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT }} />
         {brandCss ? <style dangerouslySetInnerHTML={{ __html: brandCss }} /> : null}
+        {/* PROTOTYPE builds only: Aamer's prototype door (its mock state, then the door). The snapshot
+            step rewrites these /ar/ paths relative to each page; the packager puts the files in proto/. */}
+        {process.env.NEXT_PUBLIC_PROTOTYPE === '1' ? <><script src="/ar/proto/seed.js" /><script src="/ar/proto/door.js" /></> : null}
       </head>
       <body>
         {sf === null ? (

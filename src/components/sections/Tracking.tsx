@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { bi, objects, str, num } from '@/lib/config';
 import { u, ui } from '@/lib/ui';
 import { SecHead, type SectionProps } from './shared';
+import { prototype } from '@/lib/door';
+import { Portal } from './Portal';
 
 /**
  * Tracking. The references the document declares in `tracking.items` are drawn as a timeline along
@@ -10,6 +12,11 @@ import { SecHead, type SectionProps } from './shared';
  * live tracking is connected to Amer orders in SF-3.
  */
 export function Tracking({ s, ctx }: SectionProps) {
+  if (prototype) return <section id="tracking" className="bg-grey"><div className="wrap"><SecHead s={s} lang={ctx.lang} /><Portal lang={ctx.lang} /></div></section>;
+  return <TrackingDemo s={s} ctx={ctx} />;
+}
+
+function TrackingDemo({ s, ctx }: SectionProps) {
   const { lang } = ctx;
   const [ref, setRef] = useState('');
   const [asked, setAsked] = useState<string | null>(null);

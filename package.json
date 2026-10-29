@@ -11,7 +11,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "verify": "npm run typecheck && npm run test && npm run build",
-    "snapshot": "node scripts/snapshot.mjs"
+    "snapshot": "node scripts/snapshot.mjs",
+    "prototype": "PROTOTYPE=1 node scripts/snapshot.mjs"
   },
   "dependencies": {
     "next": "15.5.6",
